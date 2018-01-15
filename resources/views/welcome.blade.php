@@ -90,7 +90,7 @@
                 </div>
                 <div class="text-center">
                     <canvas id="myChart" width="400" height="400"></canvas>
-					<a id="downloadChart" download="chartjpeg.jpg">Download current chart</a>
+					<a id="downloadChart" download="chartjpeg.png">Download current chart</a>
                 </div>
                 <div class="links">
                     <a href="https://laravel.com/docs">Documentation</a>
@@ -105,11 +105,14 @@
         <script>
 			// Avoid transparent background.
 			Chart.plugins.register({
-			beforeDraw: function(chartInstance) {
-				var ctx = chartInstance.chart.ctx;
-				ctx.fillStyle = "white";
-				ctx.fillRect(0, 0, chartInstance.chart.width, chartInstance.chart.height);
-			  }
+				beforeDraw: function(chartInstance) {
+					var ctx = chartInstance.chart.ctx;
+					ctx.fillStyle = "white";
+					ctx.fillRect(0, 0, chartInstance.chart.width, chartInstance.chart.height);
+				},
+				afterRender: function() {
+					document.getElementById("downloadChart").href = document.getElementById("myChart").toDataURL("image/png");
+				}
 			});
 
 			// Generate data.
@@ -122,7 +125,6 @@
                     Math.floor((Math.random() * 100) + 1)];
                 myChart.data.datasets[0].data = dummyData;
                 myChart.update();
-				document.getElementById("downloadChart").href = document.getElementById("myChart").toDataURL("image/jpg");
             }
             setInterval(dataGenerator, 5000);
 			
