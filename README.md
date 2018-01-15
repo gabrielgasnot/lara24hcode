@@ -29,6 +29,5 @@ php artisan serve
 ```
 
 ## Errors
-## Errors
 
 If you can't start the application, take a look at "/storage/logs/laravel.log"
