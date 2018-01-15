@@ -51,6 +51,10 @@
             .title {
                 font-size: 84px;
             }
+			
+			.links {
+				margin-top: 2em;
+			}
 
             .links > a {
                 color: #636b6f;
@@ -86,6 +90,7 @@
                 </div>
                 <div class="text-center">
                     <canvas id="myChart" width="400" height="400"></canvas>
+					<a id="downloadChart" download="chartjpeg.jpg">Download current chart</a>
                 </div>
                 <div class="links">
                     <a href="https://laravel.com/docs">Documentation</a>
@@ -98,7 +103,16 @@
         </div>
 
         <script>
-            var dummyData = [12, 19, 3, 5, 2, 3];
+			// Avoid transparent background.
+			Chart.plugins.register({
+			beforeDraw: function(chartInstance) {
+				var ctx = chartInstance.chart.ctx;
+				ctx.fillStyle = "white";
+				ctx.fillRect(0, 0, chartInstance.chart.width, chartInstance.chart.height);
+			  }
+			});
+
+			// Generate data.
             function dataGenerator() {
                 dummyData = [Math.floor((Math.random() * 100) + 1),
                     Math.floor((Math.random() * 100) + 1),
@@ -108,8 +122,11 @@
                     Math.floor((Math.random() * 100) + 1)];
                 myChart.data.datasets[0].data = dummyData;
                 myChart.update();
+				document.getElementById("downloadChart").href = document.getElementById("myChart").toDataURL("image/jpg");
             }
             setInterval(dataGenerator, 5000);
+			
+			// Build Chart.
             var ctx = document.getElementById("myChart").getContext("2d");
             var myChart = new Chart(ctx, {
                 type: 'line',
@@ -117,7 +134,6 @@
                     labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
                     datasets: [{
                         label: '# of Votes',
-                        data: dummyData,
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
                             'rgba(54, 162, 235, 0.2)',
@@ -147,6 +163,9 @@
                     }
                 }
             });
+			
+			// Get datas
+			dataGenerator();
         </script>
     </body>
 </html>
